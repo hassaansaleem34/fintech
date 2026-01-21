@@ -5,6 +5,7 @@ import 'package:fintech/core/routes_screens/route_screens.dart';
 import 'package:fintech/core/widgets/widgets_constant.dart';
 import 'package:fintech/features/onboard_screens/data/data_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 
 class OnBoardScreen extends StatefulWidget {
   const OnBoardScreen({super.key});
@@ -24,6 +25,7 @@ class _OnBoardScreenState extends State<OnBoardScreen> {
         body: PageView.builder(
           controller: _pageController,
           itemCount: onBoardData.length,
+          physics: const NeverScrollableScrollPhysics(),
           onPageChanged: (index) {
             setState(() => currentPage = index);
           },
@@ -35,7 +37,7 @@ class _OnBoardScreenState extends State<OnBoardScreen> {
                 _topSection(data.image),
                 const SizedBox(height: 10),
                 _dotsRow(),
-                const SizedBox(height: 100),
+                const SizedBox(height: 80),
                 Text(data.title, style: TextOnStyle.h1),
                 const SizedBox(height: 10),
                 Text(
@@ -87,7 +89,7 @@ class _OnBoardScreenState extends State<OnBoardScreen> {
           children: [
             Image.asset(AppAssets.mainAppLogo),
             const SizedBox(height: 80),
-            Image.asset(image),
+            SvgPicture.asset(image),
           ],
         ),
       ),

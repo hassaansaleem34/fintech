@@ -49,8 +49,9 @@ class _OtpScreenState extends State<OtpScreen> {
             SizedBox(height: 10),
             Row(
               children: [
+                SizedBox(width: 4),
                 Text(
-                  "Please enter the 6 digit code sent to the mobile \n number below",
+                  "Please enter the 6 digit code sent to the mobile \nnumber below",
                   style: TextOnStyle.phoneNumberDes,
                 ),
               ],

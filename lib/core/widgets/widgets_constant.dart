@@ -84,15 +84,30 @@ class MyTextField extends StatefulWidget {
 
 class _MyTextFieldState extends State<MyTextField> {
   bool isValid = false;
+  bool isFocused = false;
+  final FocusNode _focusNode = FocusNode();
 
   @override
   void initState() {
     super.initState();
+
     widget.controller.addListener(() {
       setState(() {
         isValid = widget.controller.text.length == 11;
       });
     });
+
+    _focusNode.addListener(() {
+      setState(() {
+        isFocused = _focusNode.hasFocus;
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _focusNode.dispose();
+    super.dispose();
   }
 
   @override
@@ -113,7 +128,8 @@ class _MyTextFieldState extends State<MyTextField> {
                   child: Text(widget.text, style: TextOnStyle.hintText),
                 ),
                 TextField(
-                  controller: widget.controller, // ✅ parent controller
+                  focusNode: _focusNode, // ✅ focus detect
+                  controller: widget.controller,
                   obscureText: widget.obscure,
                   keyboardType: TextInputType.number,
                   inputFormatters: [
@@ -149,16 +165,19 @@ class _MyTextFieldState extends State<MyTextField> {
             ),
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.only(right: 60),
-          child: Text(
-            'Helper text for status and guidance',
-            style: TextStyle(
-              color: isValid ? Colors.green : Colors.red,
-              fontSize: 12,
+
+        // ✅ Helper text sirf focus par show hoga
+        if (isFocused)
+          Padding(
+            padding: const EdgeInsets.only(right: 60),
+            child: Text(
+              'Helper text for status and guidance',
+              style: TextStyle(
+                color: isValid ? Colors.green : Colors.red,
+                fontSize: 12,
+              ),
             ),
           ),
-        ),
       ],
     );
   }
@@ -344,7 +363,10 @@ class CustomHintTextField extends StatelessWidget {
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(8),
-            borderSide: const BorderSide(color: Colors.blue, width: 1),
+            borderSide: const BorderSide(
+              color: ColorsUse.primaryButtonColor,
+              width: 1,
+            ),
           ),
           suffixIcon: suffixIcon != null
               ? Padding(

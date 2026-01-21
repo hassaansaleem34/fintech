@@ -15,6 +15,7 @@ class SignUpScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
@@ -49,9 +50,16 @@ class SignUpScreen extends StatelessWidget {
           ],
         ),
       ),
+
       bottomNavigationBar: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(20),
+        child: AnimatedPadding(
+          duration: const Duration(milliseconds: 300), // Required
+          curve: Curves.easeInOut, // Smooth animation
+          padding: EdgeInsets.only(
+            left: 20,
+            right: 20,
+            bottom: MediaQuery.of(context).viewInsets.bottom + 20,
+          ),
           child: AppButton.AppButton(
             text: Texts.countinueButton,
             onPressed: () {

@@ -1,6 +1,12 @@
+import 'package:fintech/core/constants/colors.dart';
+import 'package:fintech/core/constants/image_string.dart';
+import 'package:fintech/core/constants/string_text.dart';
 import 'package:fintech/core/constants/text_style.dart';
+import 'package:fintech/core/routes_screens/route_screens.dart';
 import 'package:fintech/core/widgets/widgets_constant.dart';
+import 'package:fintech/core/widgets/dropdown_list.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 
 class AddressScreen extends StatelessWidget {
   const AddressScreen({super.key});
@@ -26,17 +32,25 @@ class AddressScreen extends StatelessWidget {
                 SizedBox(height: 10),
               ],
             ),
-            SizedBox(height: 20),
+            SizedBox(height: 80),
             // Simple hint text field without suffix icon
-            CustomHintTextField(
+            DropDownList(
               hintText: "State",
-              suffixIcon: Icon(Icons.arrow_drop_down, color: Colors.grey),
+              suffixIcon: SvgPicture.asset(
+                AppAssets.dropDownImage,
+                width: 2,
+                height: 2,
+              ),
+              items: ['Punjab', 'Sindh', 'Bloach'],
+              controller: TextEditingController(),
             ),
             SizedBox(height: 20),
 
-            CustomHintTextField(
+            DropDownList(
               hintText: "City",
-              suffixIcon: Icon(Icons.arrow_drop_down, color: Colors.grey),
+              suffixIcon: SvgPicture.asset(AppAssets.dropDownImage),
+              items: ['Lhr', 'Skp', 'Khi', 'sialkot', 'frq'],
+              controller: TextEditingController(),
             ),
             SizedBox(height: 20),
 
@@ -48,6 +62,21 @@ class AddressScreen extends StatelessWidget {
             SizedBox(height: 20),
 
             CustomHintTextField(hintText: "Postal code"),
+            const Spacer(),
+            Center(
+              child: SafeArea(
+                child: Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: AppButton(
+                    text: Texts.countinueButton,
+                    onPressed: () {
+                      Navigator.pushNamed(context, MyRoutes.otpVerify);
+                    },
+                    backgroundColor: ColorsUse.primaryButtonColor,
+                  ),
+                ),
+              ),
+            ),
           ],
         ),
       ),
