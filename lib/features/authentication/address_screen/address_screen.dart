@@ -70,7 +70,7 @@ class AddressScreen extends StatelessWidget {
                   child: AppButton(
                     text: Texts.countinueButton,
                     onPressed: () {
-                      Navigator.pushNamed(context, MyRoutes.otpVerify);
+                      Navigator.pushNamed(context, MyRoutes.signInScreen);
                     },
                     backgroundColor: ColorsUse.primaryButtonColor,
                   ),

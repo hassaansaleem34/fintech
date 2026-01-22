@@ -171,7 +171,7 @@ class _MyTextFieldState extends State<MyTextField> {
           Padding(
             padding: const EdgeInsets.only(right: 60),
             child: Text(
-              'Helper text for status and guidance',
+              'Please add 11 digits ',
               style: TextStyle(
                 color: isValid ? Colors.green : Colors.red,
                 fontSize: 12,
@@ -374,6 +374,244 @@ class CustomHintTextField extends StatelessWidget {
                   child: suffixIcon,
                 )
               : null,
+        ),
+      ),
+    );
+  }
+}
+
+//sign in screen
+class SignInTextField extends StatefulWidget {
+  final String hintText;
+  final String? svgPath;
+  final bool obscure;
+  final TextEditingController? controller;
+  final TextInputType keyboardType;
+  final int? maxLength;
+  final String? suffixSvgPath; // 👈 new optional SVG suffix path
+
+  const SignInTextField({
+    super.key,
+    required this.hintText,
+    this.svgPath,
+    this.obscure = false,
+    this.controller,
+    this.keyboardType = TextInputType.text,
+    this.maxLength,
+    this.suffixSvgPath, // 👈 new
+  });
+
+  @override
+  State<SignInTextField> createState() => _SignInTextFieldState();
+}
+
+class _SignInTextFieldState extends State<SignInTextField> {
+  late TextEditingController _controller;
+  bool isFilled = false;
+  late bool _obscureText;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = widget.controller ?? TextEditingController();
+    _obscureText = widget.obscure;
+
+    _controller.addListener(() {
+      setState(() {
+        isFilled = _controller.text.isNotEmpty;
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    if (widget.controller == null) _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 52,
+      width: 327,
+      child: TextField(
+        controller: _controller,
+        obscureText: _obscureText,
+        keyboardType: widget.keyboardType,
+        maxLength: widget.maxLength,
+        inputFormatters: widget.keyboardType == TextInputType.number
+            ? [FilteringTextInputFormatter.digitsOnly]
+            : null,
+        decoration: InputDecoration(
+          hintText: widget.hintText,
+          counterText: "",
+          prefixIcon: widget.svgPath == null
+              ? null
+              : Padding(
+                  padding: const EdgeInsets.all(12),
+                  child: SvgPicture.asset(
+                    widget.svgPath!,
+                    fit: BoxFit.contain,
+                    colorFilter: ColorFilter.mode(
+                      isFilled ? Colors.blue : Colors.grey,
+                      BlendMode.srcIn,
+                    ),
+                  ),
+                ),
+          // 👇 suffix logic
+          suffixIcon: widget.obscure
+              ? GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      _obscureText = !_obscureText;
+                    });
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.all(12),
+                    child: SvgPicture.asset(
+                      "assets/images/icons/hide_1.svg",
+                      width: 24,
+                      height: 24,
+                      colorFilter: ColorFilter.mode(
+                        _obscureText
+                            ? Colors.grey
+                            : Colors.orange, // 👈 magic here
+                        BlendMode.srcIn,
+                      ),
+                    ),
+                  ),
+                )
+              : (widget.suffixSvgPath != null
+                    ? Padding(
+                        padding: const EdgeInsets.all(12),
+                        child: SvgPicture.asset(
+                          widget.suffixSvgPath!,
+                          width: 24,
+                          height: 24,
+                          colorFilter: const ColorFilter.mode(
+                            Colors.grey,
+                            BlendMode.srcIn,
+                          ),
+                        ),
+                      )
+                    : null),
+
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(16),
+            borderSide: const BorderSide(color: Colors.grey),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(16),
+            borderSide: const BorderSide(color: Colors.blue),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+//password
+class PasswordChangeTextField extends StatefulWidget {
+  final String hintText;
+  final bool obscure;
+  final TextEditingController? controller;
+  final TextInputType keyboardType;
+  final int? maxLength;
+  final String? suffixSvgPath;
+  final ValueChanged<String>? onChanged;
+
+  const PasswordChangeTextField({
+    super.key,
+    required this.hintText,
+    this.obscure = false,
+    this.controller,
+    this.keyboardType = TextInputType.text,
+    this.maxLength,
+    this.suffixSvgPath,
+    this.onChanged,
+  });
+
+  @override
+  State<PasswordChangeTextField> createState() =>
+      _PasswordChangeTextFieldState();
+}
+
+class _PasswordChangeTextFieldState extends State<PasswordChangeTextField> {
+  late TextEditingController _controller;
+  late bool _obscureText;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = widget.controller ?? TextEditingController();
+    _obscureText = widget.obscure;
+  }
+
+  @override
+  void dispose() {
+    if (widget.controller == null) _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 52,
+      width: 327,
+      child: TextField(
+        controller: _controller,
+        obscureText: _obscureText,
+        keyboardType: widget.keyboardType,
+        onChanged: widget.onChanged,
+        maxLength: widget.maxLength,
+        inputFormatters: widget.keyboardType == TextInputType.number
+            ? [FilteringTextInputFormatter.digitsOnly]
+            : null,
+        decoration: InputDecoration(
+          hintText: widget.hintText,
+          counterText: "",
+          suffixIcon: widget.obscure
+              ? GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      _obscureText = !_obscureText;
+                    });
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.all(12),
+                    child: SvgPicture.asset(
+                      "assets/images/icons/hide_1.svg",
+                      width: 24,
+                      height: 24,
+                      colorFilter: ColorFilter.mode(
+                        _obscureText ? Colors.grey : Colors.orange,
+                        BlendMode.srcIn,
+                      ),
+                    ),
+                  ),
+                )
+              : (widget.suffixSvgPath != null
+                    ? Padding(
+                        padding: const EdgeInsets.all(12),
+                        child: SvgPicture.asset(
+                          widget.suffixSvgPath!,
+                          width: 24,
+                          height: 24,
+                          colorFilter: const ColorFilter.mode(
+                            Colors.grey,
+                            BlendMode.srcIn,
+                          ),
+                        ),
+                      )
+                    : null),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(16),
+            borderSide: const BorderSide(color: Colors.grey),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(16),
+            borderSide: const BorderSide(color: Colors.blue),
+          ),
         ),
       ),
     );

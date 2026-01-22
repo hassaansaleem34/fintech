@@ -3,7 +3,7 @@ class AppAssets {
   //APP logo
   static const String appLogo = "assets/images/logo/logo_splash.svg";
   // main logo
-  static const String mainAppLogo = "assets/images/logo/logo_main.png";
+  static const String mainAppLogo = "assets/images/logo/main_logo.svg";
   //onboard_screen
   static const String onBoardImage =
       "assets/images/project_image/onboard_image.png";
@@ -21,4 +21,5 @@ class AppAssets {
 
   static const String dropDownImage =
       "assets/images/icons/drop_downarrow.svg.svg";
+  static const String LockImage = "assets/images/icons/lock_1.svg";
 }

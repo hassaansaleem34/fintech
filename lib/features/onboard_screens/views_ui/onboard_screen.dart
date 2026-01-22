@@ -25,7 +25,7 @@ class _OnBoardScreenState extends State<OnBoardScreen> {
         body: PageView.builder(
           controller: _pageController,
           itemCount: onBoardData.length,
-          physics: const NeverScrollableScrollPhysics(),
+
           onPageChanged: (index) {
             setState(() => currentPage = index);
           },
@@ -87,7 +87,7 @@ class _OnBoardScreenState extends State<OnBoardScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image.asset(AppAssets.mainAppLogo),
+            SvgPicture.asset(AppAssets.mainAppLogo),
             const SizedBox(height: 80),
             SvgPicture.asset(image),
           ],

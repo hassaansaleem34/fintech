@@ -41,4 +41,10 @@ class TextOnStyle {
     fontWeight: FontWeight.w700,
     color: ColorsUse.signUp,
   );
+  static const TextStyle signIntyle = TextStyle(
+   
+    fontSize: 14,
+    fontWeight: FontWeight.w400,
+    color: ColorsUse.signUp,
+  );
 }
