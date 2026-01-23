@@ -1,5 +1,6 @@
 import 'package:fintech/core/constants/colors.dart';
 import 'package:fintech/core/widgets/navbar.dart';
+import 'package:fintech/core/widgets/transaction.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -73,6 +74,7 @@ class HomeVerified extends StatelessWidget {
                               fontFamily: "inter",
                             ),
                           ),
+                          SizedBox(width: 10),
                           SvgPicture.asset("assets/images/icons/view_3.svg"),
                         ],
                       ),
@@ -184,12 +186,122 @@ class HomeVerified extends StatelessWidget {
                     ),
                   ],
                 ),
+                SizedBox(height: 20),
+                Row(
+                  children: [
+                    SvgPicture.asset("assets/images/icons/icon_clock.svg"),
+                    Text(
+                      "Today",
+                      style: TextStyle(
+                        color: Color(0xff1F1F1F),
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                  ],
+                ),
+
+                Column(
+                  children: [
+                    TransactionCard(
+                      title: "Loan Repayment",
+                      time: "10:30pm",
+                      amount: "- ₦ 1,800,400",
+                      amountColor: Colors.red,
+                      iconBg: Color(0xffEAF1FF),
+                      icon: Image.asset("assets/images/icons/Mask group.png"),
+                    ),
+                    TransactionCard(
+                      title: "Wallet Top Up",
+                      time: "5:45pm",
+                      amount: "+ ₦ 2,500",
+                      amountColor: Colors.green,
+                      iconBg: Color(0xffEEF6FF),
+                      icon: SvgPicture.asset(
+                        "assets/images/icons/plus.svg",
+                        height: 22,
+                      ),
+                    ),
+                    TransactionCard(
+                      title: "Victor Isaac",
+                      time: "10:45pm",
+                      amount: "+ ₦ 800,000",
+
+                      amountColor: Color(0xff5AD78B),
+                      iconBg: Color(0xffFFF1E8),
+                      icon: SvgPicture.asset(
+                        "assets/images/icons/VI.svg",
+                        height: 22,
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 10),
+                Row(
+                  children: [
+                    SvgPicture.asset("assets/images/icons/icon_clock.svg"),
+                    Text(
+                      "21 Sep 2022",
+                      style: TextStyle(
+                        color: Color(0xff1F1F1F),
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 10),
+                Column(
+                  children: [
+                    TransactionCard(
+                      title: "DSTV Subscription",
+                      time: "10:30pm",
+                      amount: "- ₦ 1,800,400",
+                      amountColor: Color(0xff7C18FB),
+                      iconBg: Color(0xffEAF1FF),
+                      icon: Image.asset("assets/images/logo/Ellipse 37.png"),
+                    ),
+                    TransactionCard(
+                      title: "Wisdom Olatayo",
+                      time: "5:45pm",
+                      amount: "+ ₦ 2,500",
+                      amountColor: Color(0xffF59300),
+                      iconBg: Color(0xffEEF6FF),
+                      icon: SvgPicture.asset(
+                        "assets/images/icons/WO.svg",
+                        height: 20,
+                      ),
+                    ),
+                    TransactionCard(
+                      title: "Victor Isaac",
+                      time: "10:45pm",
+                      amount: "+ ₦ 800,000",
+
+                      amountColor: Color(0xff5AD78B),
+                      iconBg: Color(0xffFFF1E8),
+                      icon: SvgPicture.asset(
+                        "assets/images/icons/VI.svg",
+                        height: 20,
+                      ),
+                    ),
+                    TransactionCard(
+                      title: "Eko Electrical",
+                      time: "10:45pm",
+                      amount: "- ₦ 800,000",
+
+                      amountColor: Color(0xffF81111),
+                      iconBg: Color(0xffFFF1E8),
+                      icon: Image.asset(
+                        "assets/images/logo/Ellipse 37 (1).png",
+                      ),
+                    ),
+                  ],
+                ),
               ],
             ),
           ),
         ),
       ),
-      // bottomNavigationBar: SimpleNavBar(),
     );
   }
 }

@@ -3,9 +3,9 @@ import 'package:fintech/core/constants/image_string.dart';
 import 'package:fintech/core/constants/string_text.dart';
 import 'package:fintech/core/constants/text_style.dart';
 import 'package:fintech/core/routes_screens/route_screens.dart';
+import 'package:fintech/core/widgets/datepicker.dart';
 import 'package:fintech/core/widgets/widgets_constant.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 
 class InfoScreen extends StatefulWidget {
   const InfoScreen({super.key});
@@ -21,6 +21,22 @@ class _InfoScreenState extends State<InfoScreen> {
   final TextEditingController dobController = TextEditingController();
 
   bool isButtonEnabled = false;
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(1900),
+      lastDate: DateTime(2100),
+    );
+
+    if (picked != null) {
+      final formatted =
+          "${picked.day.toString().padLeft(2, '0')}/"
+          "${picked.month.toString().padLeft(2, '0')}/"
+          "${picked.year}";
+      dobController.text = formatted;
+    }
+  }
 
   void checkFields() {
     setState(() {
@@ -100,6 +116,7 @@ class _InfoScreenState extends State<InfoScreen> {
             SizedBox(height: 40),
             Row(
               children: [
+                // SizedBox(width: 30),
                 Text(
                   "Date of birth",
                   style: TextStyle(
@@ -113,6 +130,7 @@ class _InfoScreenState extends State<InfoScreen> {
             SizedBox(height: 10),
             Row(
               children: [
+                // SizedBox(width: 30),
                 Text(
                   "DD/MM/YY",
                   style: TextStyle(
@@ -124,12 +142,13 @@ class _InfoScreenState extends State<InfoScreen> {
                 ),
               ],
             ),
-            SizedBox(height: 40),
-            CustomTextField(
+            SizedBox(height: 20),
+            DatePicker(
               hintText: "DD/MM/YY",
               svgPath: AppAssets.calendarImage,
-              keyboardType: TextInputType.datetime,
               controller: dobController,
+              readOnly: true,
+              onTap: () => _selectDate(context),
             ),
             const Spacer(),
             Padding(

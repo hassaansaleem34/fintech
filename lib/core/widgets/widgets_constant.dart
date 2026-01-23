@@ -171,7 +171,7 @@ class _MyTextFieldState extends State<MyTextField> {
           Padding(
             padding: const EdgeInsets.only(right: 60),
             child: Text(
-              'Please add 11 digits ',
+              'Please enter 11 digits ',
               style: TextStyle(
                 color: isValid ? Colors.green : Colors.red,
                 fontSize: 12,
@@ -276,46 +276,48 @@ class _CustomTextFieldState extends State<CustomTextField> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(right: 60),
-      child: SizedBox(
-        height: 49,
-        width: 329,
-        child: TextField(
-          controller: _controller,
-          obscureText: widget.obscure,
-          keyboardType: widget.keyboardType,
-          maxLength: widget.maxLength,
-          inputFormatters: widget.keyboardType == TextInputType.number
-              ? [FilteringTextInputFormatter.digitsOnly]
-              : null,
-          decoration: InputDecoration(
-            hintText: widget.hintText,
-            counterText: "",
-            prefixIcon: widget.svgPath == null
-                ? null
-                : Padding(
-                    padding: const EdgeInsets.all(12),
-                    child: SvgPicture.asset(
-                      widget.svgPath!,
+      padding: const EdgeInsets.only(right: 20),
+      child: Center(
+        child: SizedBox(
+          height: 49,
+          width: 329,
+          child: TextField(
+            controller: _controller,
+            obscureText: widget.obscure,
+            keyboardType: widget.keyboardType,
+            maxLength: widget.maxLength,
+            inputFormatters: widget.keyboardType == TextInputType.number
+                ? [FilteringTextInputFormatter.digitsOnly]
+                : null,
+            decoration: InputDecoration(
+              hintText: widget.hintText,
+              counterText: "",
+              prefixIcon: widget.svgPath == null
+                  ? null
+                  : Padding(
+                      padding: const EdgeInsets.all(12),
+                      child: SvgPicture.asset(
+                        widget.svgPath!,
 
-                      fit: BoxFit.contain,
-                      colorFilter: ColorFilter.mode(
-                        isFilled ? Colors.blue : Colors.grey,
-                        BlendMode.srcIn,
+                        fit: BoxFit.contain,
+                        colorFilter: ColorFilter.mode(
+                          isFilled ? Colors.blue : Colors.grey,
+                          BlendMode.srcIn,
+                        ),
                       ),
                     ),
-                  ),
-            contentPadding: const EdgeInsets.symmetric(
-              horizontal: 12,
-              vertical: 15,
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-              borderSide: const BorderSide(color: Colors.grey),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-              borderSide: const BorderSide(color: Colors.blue),
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 12,
+                vertical: 15,
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: const BorderSide(color: Colors.grey),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: const BorderSide(color: Colors.blue),
+              ),
             ),
           ),
         ),

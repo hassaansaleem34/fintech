@@ -20,73 +20,109 @@ class DropDownList extends StatefulWidget {
 }
 
 class _DropDownListState extends State<DropDownList> {
+  final LayerLink _layerLink = LayerLink();
+  OverlayEntry? _overlayEntry;
   String? selectedValue;
-  final GlobalKey _iconKey = GlobalKey();
 
-  void _openDropdown() async {
-    final RenderBox box =
-        _iconKey.currentContext!.findRenderObject() as RenderBox;
-    final Offset position = box.localToGlobal(Offset.zero);
+  void _toggleDropdown() {
+    if (_overlayEntry == null) {
+      _showDropdown();
+    } else {
+      _removeDropdown();
+    }
+  }
 
-    final value = await showMenu<String>(
-      context: context,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-      elevation: 8,
-      constraints: const BoxConstraints(
-        maxHeight: 160, // ✅ ~3 items ke baad scroll
+  void _showDropdown() {
+    final overlay = Overlay.of(context);
+
+    _overlayEntry = OverlayEntry(
+      builder: (context) => Positioned(
+        width: _getFieldWidth(),
+        child: CompositedTransformFollower(
+          link: _layerLink,
+          offset: const Offset(0, 52), // field height + gap
+          showWhenUnlinked: false,
+          child: Material(
+            elevation: 8,
+            borderRadius: BorderRadius.circular(12),
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxHeight: 180),
+              child: ListView(
+                padding: EdgeInsets.zero,
+                shrinkWrap: true,
+                children: widget.items.map((item) {
+                  return InkWell(
+                    onTap: () {
+                      widget.controller?.text = item;
+                      selectedValue = item;
+                      _removeDropdown();
+                      setState(() {});
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 14,
+                        vertical: 12,
+                      ),
+                      child: Text(item),
+                    ),
+                  );
+                }).toList(),
+              ),
+            ),
+          ),
+        ),
       ),
-      position: RelativeRect.fromLTRB(
-        position.dx,
-        position.dy + box.size.height + 6,
-        position.dx + box.size.width,
-        0,
-      ),
-      items: widget.items
-          .map((item) => PopupMenuItem<String>(value: item, child: Text(item)))
-          .toList(),
     );
 
-    if (value != null) {
-      setState(() {
-        selectedValue = value;
-        widget.controller?.text = value;
-      });
-    }
+    overlay.insert(_overlayEntry!);
+  }
+
+  void _removeDropdown() {
+    _overlayEntry?.remove();
+    _overlayEntry = null;
+  }
+
+  double _getFieldWidth() {
+    final renderBox = context.findRenderObject() as RenderBox;
+    return renderBox.size.width;
   }
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: 329,
-      height: 50,
-      child: TextField(
-        controller: widget.controller,
-        readOnly: true,
-        decoration: InputDecoration(
-          hintText: widget.hintText,
-          hintStyle: TextStyle(color: Colors.grey.shade600),
-          contentPadding: const EdgeInsets.fromLTRB(12, 8, 8, 8),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
-            borderSide: const BorderSide(color: Colors.grey, width: 1),
-          ),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
-            borderSide: const BorderSide(color: Colors.grey, width: 1),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
-            borderSide: const BorderSide(
-              color: ColorsUse.primaryButtonColor,
-              width: 1,
+    return CompositedTransformTarget(
+      link: _layerLink,
+      child: SizedBox(
+        width: 329,
+        height: 50,
+        child: TextField(
+          controller: widget.controller,
+          readOnly: true,
+          onTap: _toggleDropdown,
+          decoration: InputDecoration(
+            hintText: widget.hintText,
+            hintStyle: TextStyle(color: Colors.grey.shade600),
+            contentPadding: const EdgeInsets.fromLTRB(12, 8, 8, 8),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: const BorderSide(color: Colors.grey, width: 1),
             ),
-          ),
-          suffixIcon: InkWell(
-            key: _iconKey,
-            onTap: _openDropdown,
-            child: Padding(
-              padding: const EdgeInsets.all(15),
-              child: widget.suffixIcon,
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: const BorderSide(color: Colors.grey, width: 1),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: const BorderSide(
+                color: ColorsUse.primaryButtonColor,
+                width: 1,
+              ),
+            ),
+            suffixIcon: InkWell(
+              onTap: _toggleDropdown,
+              child: Padding(
+                padding: const EdgeInsets.all(18),
+                child: widget.suffixIcon,
+              ),
             ),
           ),
         ),

@@ -13,7 +13,12 @@ class SimpleNavBar extends StatefulWidget {
 class _SimpleNavBarState extends State<SimpleNavBar> {
   int currentIndex = 0;
 
-  final pages = [HomeVerified()];
+  final pages = [
+    HomeVerified(),
+    Container(), // Loan page
+    Container(), // Bills page
+    Container(), // More page
+  ];
 
   Widget navIcon(String asset, bool isActive) {
     return SvgPicture.asset(
@@ -55,7 +60,7 @@ class _SimpleNavBarState extends State<SimpleNavBar> {
             label: "Loan",
           ),
           BottomNavigationBarItem(
-            icon: navIcon("assets/images/icons/money.svg", currentIndex == 2),
+            icon: navIcon("assets/images/icons/Menu.svg", currentIndex == 2),
             label: "Bills",
           ),
           BottomNavigationBarItem(

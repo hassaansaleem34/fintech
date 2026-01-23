@@ -9,8 +9,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 class AddressScreen extends StatelessWidget {
-  const AddressScreen({super.key});
-
+  AddressScreen({super.key});
+  final TextEditingController accountController = TextEditingController();
+  final TextEditingController cityController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,21 +37,18 @@ class AddressScreen extends StatelessWidget {
             // Simple hint text field without suffix icon
             DropDownList(
               hintText: "State",
-              suffixIcon: SvgPicture.asset(
-                AppAssets.dropDownImage,
-                width: 2,
-                height: 2,
-              ),
-              items: ['Punjab', 'Sindh', 'Bloach'],
-              controller: TextEditingController(),
+              controller: accountController,
+              items: ["Punjab", "Sindh", "Baloch"],
+              suffixIcon: SvgPicture.asset(AppAssets.dropDownImage),
             ),
+
             SizedBox(height: 20),
 
             DropDownList(
               hintText: "City",
+              controller: cityController,
+              items: ["Lhr", "Skp", "Khi"],
               suffixIcon: SvgPicture.asset(AppAssets.dropDownImage),
-              items: ['Lhr', 'Skp', 'Khi', 'sialkot', 'frq'],
-              controller: TextEditingController(),
             ),
             SizedBox(height: 20),
 

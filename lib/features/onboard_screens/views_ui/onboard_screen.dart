@@ -16,63 +16,54 @@ class OnBoardScreen extends StatefulWidget {
 
 class _OnBoardScreenState extends State<OnBoardScreen> {
   int currentPage = 0;
-  final PageController _pageController = PageController();
 
   @override
   Widget build(BuildContext context) {
+    final data = onBoardData[currentPage];
+
     return SafeArea(
       child: Scaffold(
-        body: PageView.builder(
-          controller: _pageController,
-          itemCount: onBoardData.length,
+        body: Column(
+          children: [
+            _topSection(data.image),
+            const SizedBox(height: 10),
+            _dotsRow(),
+            const SizedBox(height: 80),
+            Text(data.title, style: TextOnStyle.h1),
+            const SizedBox(height: 10),
+            Text(
+              data.subtitle,
+              textAlign: TextAlign.center,
+              style: TextOnStyle.h2,
+            ),
+            const SizedBox(height: 30),
 
-          onPageChanged: (index) {
-            setState(() => currentPage = index);
-          },
-          itemBuilder: (context, index) {
-            final data = onBoardData[index];
-
-            return Column(
-              children: [
-                _topSection(data.image),
-                const SizedBox(height: 10),
-                _dotsRow(),
-                const SizedBox(height: 80),
-                Text(data.title, style: TextOnStyle.h1),
-                const SizedBox(height: 10),
-                Text(
-                  data.subtitle,
-                  textAlign: TextAlign.center,
-                  style: TextOnStyle.h2,
-                ),
-                const SizedBox(height: 40),
-                AppButton(
-                  text: data.isLast ? "Get Started" : "Next",
-                  backgroundColor: ColorsUse.secondaryButtonColor,
-                  onPressed: () {
-                    if (data.isLast) {
-                      Navigator.pushNamed(context, MyRoutes.signUp);
-                    } else {
-                      _pageController.nextPage(
-                        duration: const Duration(milliseconds: 300),
-                        curve: Curves.ease,
-                      );
-                    }
-                  },
-                ),
-                if (!data.isLast) ...[
-                  const SizedBox(height: 10),
-                  AppButton(
-                    text: "Skip",
-                    backgroundColor: ColorsUse.primaryButtonColor,
-                    onPressed: () {
-                      _pageController.jumpToPage(onBoardData.length - 1);
-                    },
-                  ),
-                ],
-              ],
-            );
-          },
+            AppButton(
+              text: data.isLast ? "Get Started" : "Next",
+              backgroundColor: ColorsUse.secondaryButtonColor,
+              onPressed: () {
+                setState(() {
+                  if (data.isLast) {
+                    Navigator.pushNamed(context, MyRoutes.signUp);
+                  } else if (currentPage < onBoardData.length - 1) {
+                    currentPage++;
+                  }
+                });
+              },
+            ),
+            if (!data.isLast) ...[
+              const SizedBox(height: 10),
+              AppButton(
+                text: "Skip",
+                backgroundColor: ColorsUse.primaryButtonColor,
+                onPressed: () {
+                  setState(() {
+                    currentPage = onBoardData.length - 1;
+                  });
+                },
+              ),
+            ],
+          ],
         ),
       ),
     );
@@ -99,19 +90,24 @@ class _OnBoardScreenState extends State<OnBoardScreen> {
   Widget _dotsRow() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
-      children: List.generate(
-        onBoardData.length,
-        (index) => Padding(
+      children: List.generate(onBoardData.length, (index) {
+        bool isActive = currentPage == index;
+        return Padding(
           padding: const EdgeInsets.symmetric(horizontal: 4),
-          child: Icon(
-            Icons.circle,
-            size: 8,
-            color: currentPage == index
-                ? ColorsUse.secondaryButtonColor
-                : const Color(0XFFC4C4C4),
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeInOut,
+            width: isActive ? 12 : 8, // Active dot slightly bigger
+            height: isActive ? 12 : 8,
+            decoration: BoxDecoration(
+              color: isActive
+                  ? ColorsUse.secondaryButtonColor
+                  : const Color(0XFFC4C4C4),
+              shape: BoxShape.circle,
+            ),
           ),
-        ),
-      ),
+        );
+      }),
     );
   }
 }

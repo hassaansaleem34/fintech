@@ -75,7 +75,12 @@ class _CreatenewPasswordState extends State<CreatenewPassword> {
 
               const SizedBox(height: 20),
 
-              Text("Confirm new password", style: TextOnStyle.signIntyle),
+              Row(
+                children: [
+                  SizedBox(width: 20),
+                  Text("Confirm new password", style: TextOnStyle.signIntyle),
+                ],
+              ),
               const SizedBox(height: 10),
               Center(
                 child: PasswordChangeTextField(

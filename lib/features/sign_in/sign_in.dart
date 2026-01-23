@@ -38,7 +38,7 @@ class SignIn extends StatelessWidget {
                   Text("Email  Address", style: TextOnStyle.signIntyle),
                 ],
               ),
-              SizedBox(height: 20),
+              SizedBox(height: 10),
 
               Padding(
                 padding: const EdgeInsets.only(right: 30),
@@ -51,7 +51,7 @@ class SignIn extends StatelessWidget {
               ),
               SizedBox(height: 30),
               Row(children: [Text("Password", style: TextOnStyle.signIntyle)]),
-              SizedBox(height: 20),
+              SizedBox(height: 10),
               Padding(
                 padding: const EdgeInsets.only(right: 30),
                 child: SignInTextField(
@@ -93,7 +93,7 @@ class SignIn extends StatelessWidget {
                     child: AppButton(
                       text: Texts.countinueButton,
                       onPressed: () {
-                        Navigator.pushNamed(context, MyRoutes.signInScreen);
+                        
                       },
                       backgroundColor: ColorsUse.primaryButtonColor,
                     ),
@@ -105,12 +105,17 @@ class SignIn extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text("Don’t have an account?", style: TextOnStyle.signIntyle),
-                  Text(
-                    "Sign Up",
-                    style: TextStyle(
-                      color: ColorsUse.secondaryButtonColor,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w400,
+                  InkWell(
+                    onTap: () {
+                      Navigator.pushNamed(context, MyRoutes.signUp);
+                    },
+                    child: Text(
+                      "Sign Up",
+                      style: TextStyle(
+                        color: ColorsUse.secondaryButtonColor,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w400,
+                      ),
                     ),
                   ),
                 ],
