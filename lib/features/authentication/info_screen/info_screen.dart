@@ -47,31 +47,31 @@ class _InfoScreenState extends State<InfoScreen> {
     });
   }
 
-  Future<void> _selectDate(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(1900),
-      lastDate: DateTime(2100),
-    );
+  // Future<void> _selectDate(BuildContext context) async {
+  //   final DateTime? picked = await showDatePicker(
+  //     context: context,
+  //     initialDate: DateTime.now(),
+  //     firstDate: DateTime(1900),
+  //     lastDate: DateTime(2100),
+  //   );
 
-    if (picked != null) {
-      final formatted =
-          "${picked.day.toString().padLeft(2, '0')}/"
-          "${picked.month.toString().padLeft(2, '0')}/"
-          "${picked.year}";
-      dobController.text = formatted;
-    }
-  }
+  //   if (picked != null) {
+  //     final formatted =
+  //         "${picked.day.toString().padLeft(2, '0')}/"
+  //         "${picked.month.toString().padLeft(2, '0')}/"
+  //         "${picked.year}";
+  //     dobController.text = formatted;
+  //   }
+  // }
 
-  @override
-  void dispose() {
-    firstNameController.dispose();
-    lastNameController.dispose();
-    emailController.dispose();
-    dobController.dispose();
-    super.dispose();
-  }
+  // @override
+  // void dispose() {
+  //   firstNameController.dispose();
+  //   lastNameController.dispose();
+  //   emailController.dispose();
+  //   dobController.dispose();
+  //   super.dispose();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -152,7 +152,7 @@ class _InfoScreenState extends State<InfoScreen> {
               svgPath: AppAssets.calendarImage,
               controller: dobController,
               readOnly: true,
-              onTap: () => _selectDate(context),
+              borderColor: Colors.grey,
             ),
             const Spacer(),
             Padding(

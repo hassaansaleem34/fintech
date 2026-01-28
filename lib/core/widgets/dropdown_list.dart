@@ -1,132 +1,117 @@
 import 'package:flutter/material.dart';
-import 'package:fintech/core/constants/colors.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:country_state_city_selector/country_state_city_selector.dart';
 
 class DropDownList extends StatefulWidget {
-  const DropDownList({
-    super.key,
-    required this.hintText,
-    required this.items,
-    this.suffixIcon,
-    this.controller,
-  });
-
-  final String hintText;
-  final List<String> items;
-  final Widget? suffixIcon;
-  final TextEditingController? controller;
+  const DropDownList({super.key});
 
   @override
   State<DropDownList> createState() => _DropDownListState();
 }
 
 class _DropDownListState extends State<DropDownList> {
-  final LayerLink _layerLink = LayerLink();
-  OverlayEntry? _overlayEntry;
-  String? selectedValue;
+  String? selectedCountry;
+  String? selectedState;
+  String? selectedCity;
 
-  void _toggleDropdown() {
-    if (_overlayEntry == null) {
-      _showDropdown();
-    } else {
-      _removeDropdown();
-    }
-  }
-
-  void _showDropdown() {
-    final overlay = Overlay.of(context);
-
-    _overlayEntry = OverlayEntry(
-      builder: (context) => Positioned(
-        width: _getFieldWidth(),
-        child: CompositedTransformFollower(
-          link: _layerLink,
-          offset: const Offset(0, 52), // field height + gap
-          showWhenUnlinked: false,
-          child: Material(
-            elevation: 8,
-            borderRadius: BorderRadius.circular(12),
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxHeight: 180),
-              child: ListView(
-                padding: EdgeInsets.zero,
-                shrinkWrap: true,
-                children: widget.items.map((item) {
-                  return InkWell(
-                    onTap: () {
-                      widget.controller?.text = item;
-                      selectedValue = item;
-                      _removeDropdown();
-                      setState(() {});
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 14,
-                        vertical: 12,
-                      ),
-                      child: Text(item),
-                    ),
-                  );
-                }).toList(),
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-
-    overlay.insert(_overlayEntry!);
-  }
-
-  void _removeDropdown() {
-    _overlayEntry?.remove();
-    _overlayEntry = null;
-  }
-
-  double _getFieldWidth() {
-    final renderBox = context.findRenderObject() as RenderBox;
-    return renderBox.size.width;
-  }
+  // Controllers for custom text fields
+  final TextEditingController countryController = TextEditingController();
+  final TextEditingController stateController = TextEditingController();
+  final TextEditingController cityController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    return CompositedTransformTarget(
-      link: _layerLink,
-      child: SizedBox(
-        width: 329,
-        height: 50,
-        child: TextField(
-          controller: widget.controller,
-          readOnly: true,
-          onTap: _toggleDropdown,
-          decoration: InputDecoration(
-            hintText: widget.hintText,
-            hintStyle: TextStyle(color: Colors.grey.shade600),
-            contentPadding: const EdgeInsets.fromLTRB(12, 8, 8, 8),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-              borderSide: const BorderSide(color: Colors.grey, width: 1),
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-              borderSide: const BorderSide(color: Colors.grey, width: 1),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-              borderSide: const BorderSide(
-                color: ColorsUse.primaryButtonColor,
-                width: 1,
-              ),
-            ),
-            suffixIcon: InkWell(
-              onTap: _toggleDropdown,
-              child: Padding(
-                padding: const EdgeInsets.all(18),
-                child: widget.suffixIcon,
+    return Column(
+      children: [
+        /// 🌍 Country Field
+        _buildCustomDropdownField(
+          hint: "Select Country",
+          controller: countryController,
+          onTap: () {
+            _showPicker(context);
+          },
+        ),
+        const SizedBox(height: 16),
+
+        /// 🏙 State Field
+        _buildCustomDropdownField(
+          hint: "Select State",
+          controller: stateController,
+          onTap: selectedCountry == null
+              ? () {}
+              : () {
+                  _showPicker(context);
+                },
+        ),
+        const SizedBox(height: 16),
+
+        /// 🏘 City Field
+        _buildCustomDropdownField(
+          hint: "Select City",
+          controller: cityController,
+          onTap: (selectedCountry == null || selectedState == null)
+              ? () {}
+              : () {
+                  _showPicker(context);
+                },
+        ),
+      ],
+    );
+  }
+
+  Widget _buildCustomDropdownField({
+    required String hint,
+    required TextEditingController controller,
+    required VoidCallback onTap,
+  }) {
+    return SizedBox(
+      height: 50,
+      width: 329,
+      child: TextField(
+        controller: controller,
+        readOnly: true,
+        onTap: onTap,
+        decoration: InputDecoration(
+          hintText: hint,
+          suffixIcon: GestureDetector(
+            onTap: onTap,
+            child: Padding(
+              padding: const EdgeInsets.all(12),
+              child: SvgPicture.asset(
+                'assets/images/icons/drop_downarrow.svg',
+                height: 20,
+                width: 20,
               ),
             ),
           ),
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
         ),
       ),
+    );
+  }
+
+  void _showPicker(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (ctx) {
+        return SizedBox(
+          height: 400,
+          child: CountryStateCitySelector(
+            // ✅ Fixed: New signature with 3 strings
+            onSelectionChanged: (country, state, city) {
+              setState(() {
+                selectedCountry = country;
+                selectedState = state;
+                selectedCity = city;
+
+                countryController.text = country;
+                stateController.text = state;
+                cityController.text = city;
+              });
+            },
+          ),
+        );
+      },
     );
   }
 }

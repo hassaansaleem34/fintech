@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class HomeVerified extends StatefulWidget {
-  HomeVerified({super.key});
+  const HomeVerified({super.key});
 
   @override
   State<HomeVerified> createState() => _HomeVerifiedState();

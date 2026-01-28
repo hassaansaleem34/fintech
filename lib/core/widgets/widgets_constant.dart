@@ -188,7 +188,7 @@ class OTPInputField extends StatelessWidget {
   final Function(String) onCompleted;
   final Function(String) onChanged;
 
-  OTPInputField({
+  const OTPInputField({super.key, 
     required this.length,
     required this.onCompleted,
     required this.onChanged,

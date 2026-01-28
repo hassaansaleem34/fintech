@@ -152,27 +152,40 @@ class _SignInState extends State<SignIn> {
                   ),
                 ),
               ),
-
-              Spacer(),
-
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text("Don’t have an account?", style: TextOnStyle.signIntyle),
-                  InkWell(
-                    onTap: () {
-                      Navigator.pushNamed(context, MyRoutes.signUp);
-                    },
-                    child: Text(
-                      "Sign Up",
-                      style: TextStyle(
-                        color: ColorsUse.secondaryButtonColor,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w400,
-                      ),
+              Expanded(
+                child: Container(), // Spacer ki tarah kaam karega
+              ),
+              Padding(
+                padding: EdgeInsets.only(
+                  bottom: MediaQuery.of(context).size.height * 0.06,
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.only(right: 30),
+                  child: Center(
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          "Don’t have an account?",
+                          style: TextOnStyle.signIntyle,
+                        ),
+                        InkWell(
+                          onTap: () {
+                            Navigator.pushNamed(context, MyRoutes.signUp);
+                          },
+                          child: Text(
+                            "Sign Up",
+                            style: TextStyle(
+                              color: ColorsUse.secondaryButtonColor,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                ],
+                ),
               ),
             ],
           ),

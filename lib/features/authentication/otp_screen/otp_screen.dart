@@ -69,7 +69,7 @@ class _OtpScreenState extends State<OtpScreen> {
             ),
             SizedBox(height: 40),
             Row(
-              children: [Text("$phoneNumber", style: TextOnStyle.phoneNumber)],
+              children: [Text(phoneNumber, style: TextOnStyle.phoneNumber)],
             ),
             SizedBox(height: 30),
             Row(

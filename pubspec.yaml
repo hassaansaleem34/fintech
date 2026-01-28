@@ -30,6 +30,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+  country_picker: ^2.0.27
     
 
   # The following adds the Cupertino Icons font to your application.
@@ -42,6 +45,23 @@ dependencies:
   dropdown_button2: ^2.3.9
   flutter_launcher_icons: ^0.14.4
   multi_select_flutter: ^4.1.3
+  shared_preferences: ^2.2.2
+  flutter_rounded_date_picker: ^3.0.1
+  country_state_city_selector: ^1.0.5
+  country_state_city_picker: ^1.2.8
+ 
+ 
+ 
+
+ 
+
+
+
+ 
+  
+
+ 
+
  
 
   
@@ -51,6 +71,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+ 
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is

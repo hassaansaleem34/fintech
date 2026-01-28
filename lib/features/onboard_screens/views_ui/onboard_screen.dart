@@ -6,6 +6,7 @@ import 'package:fintech/core/widgets/widgets_constant.dart';
 import 'package:fintech/features/onboard_screens/data/data_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class OnBoardScreen extends StatefulWidget {
   const OnBoardScreen({super.key});
@@ -41,14 +42,21 @@ class _OnBoardScreenState extends State<OnBoardScreen> {
             AppButton(
               text: data.isLast ? "Get Started" : "Next",
               backgroundColor: ColorsUse.secondaryButtonColor,
-              onPressed: () {
-                setState(() {
-                  if (data.isLast) {
-                    Navigator.pushNamed(context, MyRoutes.signInScreen);
-                  } else if (currentPage < onBoardData.length - 1) {
+              onPressed: () async {
+                if (data.isLast) {
+                  final prefs = await SharedPreferences.getInstance();
+                  await prefs.setBool('isFirstTime', false);
+
+                  Navigator.pushNamedAndRemoveUntil(
+                    context,
+                    MyRoutes.signInScreen,
+                    (Route<dynamic> route) => false,
+                  );
+                } else if (currentPage < onBoardData.length - 1) {
+                  setState(() {
                     currentPage++;
-                  }
-                });
+                  });
+                }
               },
             ),
             if (!data.isLast) ...[
@@ -56,9 +64,15 @@ class _OnBoardScreenState extends State<OnBoardScreen> {
               AppButton(
                 text: "Skip",
                 backgroundColor: ColorsUse.primaryButtonColor,
-                onPressed: () {
-                  Navigator.pushNamed(context, MyRoutes.signInScreen);
-                  setState(() {});
+                onPressed: () async {
+                  final prefs = await SharedPreferences.getInstance();
+                  await prefs.setBool('isFirstTime', false);
+
+                  Navigator.pushNamedAndRemoveUntil(
+                    context,
+                    MyRoutes.signInScreen,
+                    (Route<dynamic> route) => false,
+                  );
                 },
               ),
             ],
@@ -96,7 +110,7 @@ class _OnBoardScreenState extends State<OnBoardScreen> {
           child: AnimatedContainer(
             duration: const Duration(milliseconds: 300),
             curve: Curves.easeInOut,
-            width: isActive ? 12 : 8, // Active dot slightly bigger
+            width: isActive ? 12 : 8,
             height: isActive ? 12 : 8,
             decoration: BoxDecoration(
               color: isActive

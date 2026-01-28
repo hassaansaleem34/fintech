@@ -3,8 +3,10 @@ import 'package:fintech/core/constants/image_string.dart';
 import 'package:fintech/core/constants/string_text.dart';
 import 'package:fintech/core/constants/text_style.dart';
 import 'package:fintech/core/routes_screens/route_screens.dart';
-import 'package:fintech/core/widgets/widgets_constant.dart';
 import 'package:fintech/core/widgets/dropdown_list.dart';
+import 'package:fintech/core/widgets/testdropdown.dart';
+import 'package:fintech/core/widgets/widgets_constant.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -21,37 +23,34 @@ class _AddressScreenState extends State<AddressScreen> {
   final TextEditingController address1Controller = TextEditingController();
   final TextEditingController address2Controller = TextEditingController();
   final TextEditingController postalController = TextEditingController();
+  final countryController = TextEditingController();
+  final iscityController = TextEditingController();
+
+  final stateController = TextEditingController();
 
   bool isFormValid = false;
 
   // Track which fields are empty for error messages
-  bool showAccountError = false;
-  bool showCityError = false;
+
   bool showAddress1Error = false;
   bool showAddress2Error = false;
   bool showPostalError = false;
 
   void checkFields() {
     setState(() {
-      showAccountError = accountController.text.isEmpty;
-      showCityError = cityController.text.isEmpty;
       showAddress1Error = address1Controller.text.isEmpty;
       showAddress2Error = address2Controller.text.isEmpty;
       showPostalError = postalController.text.isEmpty;
 
       isFormValid =
-          !showAccountError &&
-          !showCityError &&
-          !showAddress1Error &&
-          !showAddress2Error &&
-          !showPostalError;
+          !showAddress1Error && !showAddress2Error && !showPostalError;
     });
   }
 
   @override
   void initState() {
     super.initState();
-    accountController.addListener(checkFields);
+    countryController.addListener(checkFields);
     cityController.addListener(checkFields);
     address1Controller.addListener(checkFields);
     address2Controller.addListener(checkFields);
@@ -60,7 +59,7 @@ class _AddressScreenState extends State<AddressScreen> {
 
   @override
   void dispose() {
-    accountController.dispose();
+    countryController.dispose();
     cityController.dispose();
     address1Controller.dispose();
     address2Controller.dispose();
@@ -96,39 +95,48 @@ class _AddressScreenState extends State<AddressScreen> {
               ],
             ),
             const SizedBox(height: 40),
-
-            DropDownList(
-              hintText: "State",
-              controller: accountController,
-              items: ["Punjab", "Sindh", "Baloch"],
-              suffixIcon: SvgPicture.asset(AppAssets.dropDownImage),
-            ),
-            if (showAccountError)
-              const Padding(
-                padding: EdgeInsets.only(top: 4),
-                child: Text(
-                  "Please enter State",
-                  style: TextStyle(color: Colors.red, fontSize: 12),
-                ),
-              ),
+            DropDownList(),
             const SizedBox(height: 20),
+            //country
+            // DropDownList(
+            //   hintText: "Select Country",
+            //   controller: countryController,
+            //   pickerType: PickerType.country,
 
-            DropDownList(
-              hintText: "City",
-              controller: cityController,
-              items: ["Lhr", "Skp", "Khi"],
-              suffixIcon: SvgPicture.asset(AppAssets.dropDownImage),
-            ),
-            if (showCityError)
-              const Padding(
-                padding: EdgeInsets.only(top: 4),
-                child: Text(
-                  "Please enter City",
-                  style: TextStyle(color: Colors.red, fontSize: 12),
-                ),
-              ),
-            const SizedBox(height: 20),
+            //   suffixIcon: SvgPicture.asset(AppAssets.dropDownImage),
+            // ),
+            // if (showAccountError)
+            //   const Padding(
+            //     padding: EdgeInsets.only(right: 230),
+            //     child: Text(
+            //       "Please enter State",
+            //       style: TextStyle(color: Colors.red, fontSize: 12),
+            //     ),
+            //   ),
+            // const SizedBox(height: 20),
+            // //state
+            // DropDownList(
+            //   hintText: "Select State",
+            //   controller: stateController,
+            //   pickerType: PickerType.state,
 
+            //   suffixIcon: SvgPicture.asset(AppAssets.dropDownImage),
+            // ),
+            // if (showCityError)
+            //   Padding(
+            //     padding: const EdgeInsets.only(right: 230),
+            //     child: Text(
+            //       "Please enter City",
+            //       style: TextStyle(color: Colors.red, fontSize: 12),
+            //     ),
+            //   ),
+            // const SizedBox(height: 20),
+            // const SizedBox(height: 12),
+            // DropDownList(
+            //   hintText: "Select City",
+            //   controller: cityController,
+            //   pickerType: PickerType.city,
+            // ),
             CustomHintTextField(
               hintText: "Address Line 1",
               controller: address1Controller,
@@ -161,17 +169,16 @@ class _AddressScreenState extends State<AddressScreen> {
                   child: AppButton(
                     text: Texts.countinueButton,
                     onPressed: () {
-                      checkFields(); // update errors before navigation
+                      checkFields();
                       if (isFormValid) {
                         Navigator.pushNamedAndRemoveUntil(
                           context,
-                          MyRoutes.signInScreen,
+                          MyRoutes.simpleNavbarScreen,
                           (Route<dynamic> route) => false,
                         );
                       }
                     },
-                    backgroundColor:
-                        ColorsUse.primaryButtonColor, // always blue
+                    backgroundColor: ColorsUse.primaryButtonColor,
                   ),
                 ),
               ),
