@@ -232,11 +232,12 @@ class OTPInputField extends StatelessWidget {
 
 class CustomTextField extends StatefulWidget {
   final String hintText;
-  final String? svgPath; // 👈 SVG path instead of Widget
+  final String? svgPath;
   final bool obscure;
   final TextEditingController? controller;
   final TextInputType keyboardType;
   final int? maxLength;
+  final bool isEmail;
 
   const CustomTextField({
     super.key,
@@ -246,6 +247,7 @@ class CustomTextField extends StatefulWidget {
     this.controller,
     this.keyboardType = TextInputType.text,
     this.maxLength,
+    this.isEmail = false,
   });
 
   @override
@@ -255,14 +257,24 @@ class CustomTextField extends StatefulWidget {
 class _CustomTextFieldState extends State<CustomTextField> {
   late TextEditingController _controller;
   bool isFilled = false;
+  bool isValidEmail = true;
 
   @override
   void initState() {
     super.initState();
     _controller = widget.controller ?? TextEditingController();
+
     _controller.addListener(() {
       setState(() {
         isFilled = _controller.text.isNotEmpty;
+
+        if (widget.isEmail) {
+          isValidEmail = RegExp(
+            r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$",
+          ).hasMatch(_controller.text);
+        } else {
+          isValidEmail = true;
+        }
       });
     });
   }
@@ -291,6 +303,9 @@ class _CustomTextFieldState extends State<CustomTextField> {
                 : null,
             decoration: InputDecoration(
               hintText: widget.hintText,
+              hintStyle: TextStyle(
+                color: isValidEmail ? Colors.grey : Colors.red,
+              ),
               counterText: "",
               prefixIcon: widget.svgPath == null
                   ? null
@@ -298,7 +313,6 @@ class _CustomTextFieldState extends State<CustomTextField> {
                       padding: const EdgeInsets.all(12),
                       child: SvgPicture.asset(
                         widget.svgPath!,
-
                         fit: BoxFit.contain,
                         colorFilter: ColorFilter.mode(
                           isFilled ? Colors.blue : Colors.grey,
@@ -312,11 +326,15 @@ class _CustomTextFieldState extends State<CustomTextField> {
               ),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
-                borderSide: const BorderSide(color: Colors.grey),
+                borderSide: BorderSide(
+                  color: isValidEmail ? Colors.grey : Colors.red,
+                ),
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
-                borderSide: const BorderSide(color: Colors.blue),
+                borderSide: BorderSide(
+                  color: isValidEmail ? Colors.blue : Colors.red,
+                ),
               ),
             ),
           ),
@@ -328,10 +346,11 @@ class _CustomTextFieldState extends State<CustomTextField> {
 
 class CustomHintTextField extends StatelessWidget {
   final String hintText;
-  final Widget? suffixIcon; // optional, dropdown arrow ya koi icon
+  final Widget? suffixIcon;
   final TextEditingController? controller;
   final bool obscure;
   final TextInputType keyboardType;
+  final String? errorText; // optional error
 
   const CustomHintTextField({
     super.key,
@@ -340,44 +359,68 @@ class CustomHintTextField extends StatelessWidget {
     this.controller,
     this.obscure = false,
     this.keyboardType = TextInputType.text,
+    this.errorText,
   });
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: 329,
-      height: 50,
-      child: TextField(
-        controller: controller,
-        obscureText: obscure,
-        keyboardType: keyboardType,
-        decoration: InputDecoration(
-          hintText: hintText,
-          hintStyle: TextStyle(color: Colors.grey.shade600),
-          contentPadding: const EdgeInsets.fromLTRB(12, 8, 8, 8),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
-            borderSide: const BorderSide(color: Colors.grey, width: 1),
-          ),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
-            borderSide: const BorderSide(color: Colors.grey, width: 1),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
-            borderSide: const BorderSide(
-              color: ColorsUse.primaryButtonColor,
-              width: 1,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(
+          width: 329,
+          height: 50, // ✅ fixed height
+          child: TextField(
+            controller: controller,
+            obscureText: obscure,
+            keyboardType: keyboardType,
+            decoration: InputDecoration(
+              hintText: hintText,
+              hintStyle: TextStyle(color: Colors.grey.shade600),
+              contentPadding: const EdgeInsets.fromLTRB(12, 8, 8, 8),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: BorderSide(
+                  color: errorText == null ? Colors.grey : Colors.red,
+                  width: 1,
+                ),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: BorderSide(
+                  color: errorText == null ? Colors.grey : Colors.red,
+                  width: 1,
+                ),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: BorderSide(
+                  color: errorText == null
+                      ? ColorsUse.primaryButtonColor
+                      : Colors.red,
+                  width: 1,
+                ),
+              ),
+              suffixIcon: suffixIcon != null
+                  ? Padding(
+                      padding: const EdgeInsets.only(right: 8),
+                      child: suffixIcon,
+                    )
+                  : null,
+              errorText: null, // ❌ remove from here
             ),
           ),
-          suffixIcon: suffixIcon != null
-              ? Padding(
-                  padding: const EdgeInsets.only(right: 8),
-                  child: suffixIcon,
-                )
-              : null,
         ),
-      ),
+        // ✅ show error text manually below, but height of TextField fixed
+        if (errorText != null)
+          Padding(
+            padding: const EdgeInsets.only(top: 4, left: 4),
+            child: Text(
+              errorText!,
+              style: const TextStyle(color: Colors.red, fontSize: 12),
+            ),
+          ),
+      ],
     );
   }
 }
@@ -390,7 +433,8 @@ class SignInTextField extends StatefulWidget {
   final TextEditingController? controller;
   final TextInputType keyboardType;
   final int? maxLength;
-  final String? suffixSvgPath; // 👈 new optional SVG suffix path
+  final String? suffixSvgPath;
+  final bool isEmail; // 👈 optional email validation
 
   const SignInTextField({
     super.key,
@@ -400,7 +444,8 @@ class SignInTextField extends StatefulWidget {
     this.controller,
     this.keyboardType = TextInputType.text,
     this.maxLength,
-    this.suffixSvgPath, // 👈 new
+    this.suffixSvgPath,
+    this.isEmail = false, // default false
   });
 
   @override
@@ -411,6 +456,7 @@ class _SignInTextFieldState extends State<SignInTextField> {
   late TextEditingController _controller;
   bool isFilled = false;
   late bool _obscureText;
+  bool isValidEmail = true; 
 
   @override
   void initState() {
@@ -421,6 +467,15 @@ class _SignInTextFieldState extends State<SignInTextField> {
     _controller.addListener(() {
       setState(() {
         isFilled = _controller.text.isNotEmpty;
+
+        if (widget.isEmail) {
+          // simple email regex validation
+          isValidEmail = RegExp(
+            r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$",
+          ).hasMatch(_controller.text);
+        } else {
+          isValidEmail = true; // ignore if not email
+        }
       });
     });
   }
@@ -433,81 +488,97 @@ class _SignInTextFieldState extends State<SignInTextField> {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 52,
-      width: 327,
-      child: TextField(
-        controller: _controller,
-        obscureText: _obscureText,
-        keyboardType: widget.keyboardType,
-        maxLength: widget.maxLength,
-        inputFormatters: widget.keyboardType == TextInputType.number
-            ? [FilteringTextInputFormatter.digitsOnly]
-            : null,
-        decoration: InputDecoration(
-          hintText: widget.hintText,
-          counterText: "",
-          prefixIcon: widget.svgPath == null
-              ? null
-              : Padding(
-                  padding: const EdgeInsets.all(12),
-                  child: SvgPicture.asset(
-                    widget.svgPath!,
-                    fit: BoxFit.contain,
-                    colorFilter: ColorFilter.mode(
-                      isFilled ? Colors.blue : Colors.grey,
-                      BlendMode.srcIn,
-                    ),
-                  ),
-                ),
-          // 👇 suffix logic
-          suffixIcon: widget.obscure
-              ? GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      _obscureText = !_obscureText;
-                    });
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.all(12),
-                    child: SvgPicture.asset(
-                      "assets/images/icons/hide_1.svg",
-                      width: 24,
-                      height: 24,
-                      colorFilter: ColorFilter.mode(
-                        _obscureText
-                            ? Colors.grey
-                            : Colors.orange, // 👈 magic here
-                        BlendMode.srcIn,
+    return Column(
+      children: [
+        SizedBox(
+          height: 52,
+          width: 327,
+          child: TextField(
+            controller: _controller,
+            obscureText: _obscureText,
+            keyboardType: widget.keyboardType,
+            maxLength: widget.maxLength,
+            inputFormatters: widget.keyboardType == TextInputType.number
+                ? [FilteringTextInputFormatter.digitsOnly]
+                : null,
+            decoration: InputDecoration(
+              hintText: widget.hintText,
+              counterText: "",
+              prefixIcon: widget.svgPath == null
+                  ? null
+                  : Padding(
+                      padding: const EdgeInsets.all(12),
+                      child: SvgPicture.asset(
+                        widget.svgPath!,
+                        fit: BoxFit.contain,
+                        colorFilter: ColorFilter.mode(
+                          isFilled ? Colors.blue : Colors.grey,
+                          BlendMode.srcIn,
+                        ),
                       ),
                     ),
-                  ),
-                )
-              : (widget.suffixSvgPath != null
-                    ? Padding(
+              suffixIcon: widget.obscure
+                  ? GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          _obscureText = !_obscureText;
+                        });
+                      },
+                      child: Padding(
                         padding: const EdgeInsets.all(12),
                         child: SvgPicture.asset(
-                          widget.suffixSvgPath!,
+                          "assets/images/icons/hide_1.svg",
                           width: 24,
                           height: 24,
-                          colorFilter: const ColorFilter.mode(
-                            Colors.grey,
+                          colorFilter: ColorFilter.mode(
+                            _obscureText ? Colors.grey : Colors.orange,
                             BlendMode.srcIn,
                           ),
                         ),
-                      )
-                    : null),
-
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(16),
-            borderSide: const BorderSide(color: Colors.grey),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(16),
-            borderSide: const BorderSide(color: Colors.blue),
+                      ),
+                    )
+                  : (widget.suffixSvgPath != null
+                        ? Padding(
+                            padding: const EdgeInsets.all(12),
+                            child: SvgPicture.asset(
+                              widget.suffixSvgPath!,
+                              width: 24,
+                              height: 24,
+                              colorFilter: const ColorFilter.mode(
+                                Colors.grey,
+                                BlendMode.srcIn,
+                              ),
+                            ),
+                          )
+                        : null),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(16),
+                borderSide: BorderSide(
+                  color: isValidEmail ? Colors.grey : Colors.red,
+                ),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(16),
+                borderSide: BorderSide(
+                  color: isValidEmail ? Colors.blue : Colors.red,
+                ),
+              ),
+            ),
           ),
         ),
-      ),
+        // Optional helper/error text
+        if (widget.isEmail && !isValidEmail)
+          Padding(
+            padding: const EdgeInsets.only(top: 4, left: 20),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                "Invalid email address",
+                style: TextStyle(color: Colors.red, fontSize: 12),
+              ),
+            ),
+          ),
+      ],
     );
   }
 }

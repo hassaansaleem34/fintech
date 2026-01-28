@@ -21,6 +21,32 @@ class _InfoScreenState extends State<InfoScreen> {
   final TextEditingController dobController = TextEditingController();
 
   bool isButtonEnabled = false;
+
+  @override
+  void initState() {
+    super.initState();
+    firstNameController.addListener(checkFields);
+    lastNameController.addListener(checkFields);
+    emailController.addListener(checkFields);
+    dobController.addListener(checkFields);
+  }
+
+  void checkFields() {
+    final email = emailController.text;
+
+    final isValidEmail = RegExp(
+      r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$",
+    ).hasMatch(email);
+
+    setState(() {
+      isButtonEnabled =
+          firstNameController.text.isNotEmpty &&
+          lastNameController.text.isNotEmpty &&
+          isValidEmail &&
+          dobController.text.isNotEmpty;
+    });
+  }
+
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
@@ -36,27 +62,6 @@ class _InfoScreenState extends State<InfoScreen> {
           "${picked.year}";
       dobController.text = formatted;
     }
-  }
-
-  void checkFields() {
-    setState(() {
-      isButtonEnabled =
-          firstNameController.text.isNotEmpty &&
-          lastNameController.text.isNotEmpty &&
-          emailController.text.isNotEmpty &&
-          dobController.text.isNotEmpty;
-    });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-
-    // Add listeners to each field
-    firstNameController.addListener(checkFields);
-    lastNameController.addListener(checkFields);
-    emailController.addListener(checkFields);
-    dobController.addListener(checkFields);
   }
 
   @override
@@ -112,11 +117,11 @@ class _InfoScreenState extends State<InfoScreen> {
               keyboardType: TextInputType.emailAddress,
               maxLength: 50,
               controller: emailController,
+              isEmail: true, // 👈 email validation ON
             ),
             SizedBox(height: 40),
             Row(
               children: [
-                // SizedBox(width: 30),
                 Text(
                   "Date of birth",
                   style: TextStyle(
@@ -130,7 +135,6 @@ class _InfoScreenState extends State<InfoScreen> {
             SizedBox(height: 10),
             Row(
               children: [
-                // SizedBox(width: 30),
                 Text(
                   "DD/MM/YY",
                   style: TextStyle(
@@ -159,12 +163,10 @@ class _InfoScreenState extends State<InfoScreen> {
                     ? () {
                         Navigator.pushNamed(context, MyRoutes.addressScreen);
                       }
-                    : () {
-                        // disabled state → kuch na ho
-                      },
+                    : () {},
                 backgroundColor: isButtonEnabled
                     ? ColorsUse.primaryButtonColor
-                    : Colors.grey.shade400, // gray when disabled
+                    : Colors.grey.shade400,
               ),
             ),
           ],

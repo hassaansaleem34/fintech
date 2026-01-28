@@ -8,7 +8,9 @@ class MyRoutes {
   static String signInScreen = "/SignInScreen";
   static String passwordRecoveryScreen = "/passwordRecovery";
   static String verifyScreen = "/verifyyourScreen";
-   static String createPassword = "/createPassword";
-    static String homeVerifiedScreen = "/homerverified";
-    static String simpleNavbarScreen = "/navBar";
+  static String createPassword = "/createPassword";
+  static String homeVerifiedScreen = "/homerverified";
+  static String simpleNavbarScreen = "/navBar";
+  static String loanRequest = "/loanRequest";
+  static String fillForm = "/fillForm";
 }

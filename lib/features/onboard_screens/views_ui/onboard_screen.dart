@@ -44,7 +44,7 @@ class _OnBoardScreenState extends State<OnBoardScreen> {
               onPressed: () {
                 setState(() {
                   if (data.isLast) {
-                    Navigator.pushNamed(context, MyRoutes.signUp);
+                    Navigator.pushNamed(context, MyRoutes.signInScreen);
                   } else if (currentPage < onBoardData.length - 1) {
                     currentPage++;
                   }
@@ -57,9 +57,8 @@ class _OnBoardScreenState extends State<OnBoardScreen> {
                 text: "Skip",
                 backgroundColor: ColorsUse.primaryButtonColor,
                 onPressed: () {
-                  setState(() {
-                    currentPage = onBoardData.length - 1;
-                  });
+                  Navigator.pushNamed(context, MyRoutes.signInScreen);
+                  setState(() {});
                 },
               ),
             ],

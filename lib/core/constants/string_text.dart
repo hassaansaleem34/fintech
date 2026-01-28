@@ -15,6 +15,7 @@ class Texts {
   static const String buttonTextSendEmail = "Send Email";
   static const String signEmailEmail = "Sign in";
    static const String createNewPassword = "Create New Password";
+   static const String getLoan = "Get Loan Offer";
 
   //signup screen text
   static const String phoneNumber = "Phone Number";

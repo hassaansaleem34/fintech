@@ -41,6 +41,7 @@ dependencies:
   pinput: ^6.0.1
   dropdown_button2: ^2.3.9
   flutter_launcher_icons: ^0.14.4
+  multi_select_flutter: ^4.1.3
  
 
   

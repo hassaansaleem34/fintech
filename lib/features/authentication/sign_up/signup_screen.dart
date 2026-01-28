@@ -8,9 +8,34 @@ import 'package:fintech/core/widgets/widgets_constant.dart' as AppButton;
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
-class SignUpScreen extends StatelessWidget {
-  SignUpScreen({super.key});
+class SignUpScreen extends StatefulWidget {
+  const SignUpScreen({super.key});
+
+  @override
+  State<SignUpScreen> createState() => _SignUpScreenState();
+}
+
+class _SignUpScreenState extends State<SignUpScreen> {
   final phoneController = TextEditingController();
+  bool isButtonEnabled = false;
+
+  @override
+  void initState() {
+    super.initState();
+
+    phoneController.addListener(() {
+      setState(() {
+        // Button enable only if 11 digits
+        isButtonEnabled = phoneController.text.length == 11;
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    phoneController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -20,9 +45,7 @@ class SignUpScreen extends StatelessWidget {
         backgroundColor: Colors.white,
         elevation: 0,
         leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
+          onPressed: () => Navigator.pop(context),
           icon: SvgPicture.asset(AppAssets.backImage),
         ),
       ),
@@ -50,11 +73,10 @@ class SignUpScreen extends StatelessWidget {
           ],
         ),
       ),
-
       bottomNavigationBar: SafeArea(
         child: AnimatedPadding(
-          duration: const Duration(milliseconds: 300), // Required
-          curve: Curves.easeInOut, // Smooth animation
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeInOut,
           padding: EdgeInsets.only(
             left: 20,
             right: 20,
@@ -63,13 +85,23 @@ class SignUpScreen extends StatelessWidget {
           child: AppButton.AppButton(
             text: Texts.countinueButton,
             onPressed: () {
-              Navigator.pushNamed(
-                context,
-                MyRoutes.otpVerify,
-                arguments: phoneController.text,
-              );
+              if (isButtonEnabled) {
+                // ✅ 11 digits check
+                Navigator.pushNamed(
+                  context,
+                  MyRoutes.otpVerify,
+                  arguments: phoneController.text,
+                );
+              } else {
+                // Optionally show a toast/snackbar
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Please enter 11 digits')),
+                );
+              }
             },
-            backgroundColor: ColorsUse.primaryButtonColor,
+            backgroundColor: isButtonEnabled
+                ? ColorsUse.primaryButtonColor
+                : Colors.grey.shade400, // visual disable
           ),
         ),
       ),

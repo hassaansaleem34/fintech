@@ -19,18 +19,31 @@ class _CreatenewPasswordState extends State<CreatenewPassword> {
 
   bool _showPasswordError = false;
   bool _showConfirmError = false;
+  bool _isFormValid = false;
 
-  void _validatePassword(String value) {
+  void _checkForm() {
+    final password = _passwordController.text;
+    final confirm = _confirmController.text;
+
     setState(() {
-      _showPasswordError = value.length < 6;
-      _showConfirmError = _confirmController.text != value;
+      _showPasswordError = password.length < 6;
+      _showConfirmError = confirm != password;
+      _isFormValid = password.length >= 6 && confirm == password;
     });
   }
 
-  void _validateConfirmPassword(String value) {
-    setState(() {
-      _showConfirmError = value != _passwordController.text;
-    });
+  @override
+  void initState() {
+    super.initState();
+    _passwordController.addListener(_checkForm);
+    _confirmController.addListener(_checkForm);
+  }
+
+  @override
+  void dispose() {
+    _passwordController.dispose();
+    _confirmController.dispose();
+    super.dispose();
   }
 
   @override
@@ -49,7 +62,7 @@ class _CreatenewPasswordState extends State<CreatenewPassword> {
 
               Row(
                 children: [
-                  SizedBox(width: 18),
+                  const SizedBox(width: 18),
                   Text("Enter new password", style: TextOnStyle.signIntyle),
                 ],
               ),
@@ -58,10 +71,9 @@ class _CreatenewPasswordState extends State<CreatenewPassword> {
                 child: PasswordChangeTextField(
                   controller: _passwordController,
                   hintText: "",
-                  suffixSvgPath: AppAssets.LockImage,
+                  suffixSvgPath: AppAssets.lockImage,
                   maxLength: 50,
                   obscure: true,
-                  onChanged: _validatePassword,
                 ),
               ),
               if (_showPasswordError)
@@ -77,7 +89,7 @@ class _CreatenewPasswordState extends State<CreatenewPassword> {
 
               Row(
                 children: [
-                  SizedBox(width: 20),
+                  const SizedBox(width: 20),
                   Text("Confirm new password", style: TextOnStyle.signIntyle),
                 ],
               ),
@@ -86,10 +98,9 @@ class _CreatenewPasswordState extends State<CreatenewPassword> {
                 child: PasswordChangeTextField(
                   controller: _confirmController,
                   hintText: "",
-                  suffixSvgPath: AppAssets.LockImage,
+                  suffixSvgPath: AppAssets.lockImage,
                   maxLength: 50,
                   obscure: true,
-                  onChanged: _validateConfirmPassword,
                 ),
               ),
               if (_showConfirmError)
@@ -100,7 +111,9 @@ class _CreatenewPasswordState extends State<CreatenewPassword> {
                     style: TextStyle(color: Colors.red, fontSize: 12),
                   ),
                 ),
-              Spacer(),
+
+              const Spacer(),
+
               Center(
                 child: SafeArea(
                   child: Padding(
@@ -108,12 +121,12 @@ class _CreatenewPasswordState extends State<CreatenewPassword> {
                     child: AppButton(
                       text: Texts.Passwordrecovery,
                       onPressed: () {
-                        Navigator.pushNamed(
-                          context,
-                          MyRoutes.simpleNavbarScreen,
-                        );
+                        if (_isFormValid) {
+                          Navigator.pushNamed(context, MyRoutes.signInScreen);
+                        }
                       },
-                      backgroundColor: ColorsUse.primaryButtonColor,
+                      backgroundColor:
+                          ColorsUse.primaryButtonColor, 
                     ),
                   ),
                 ),

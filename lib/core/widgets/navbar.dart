@@ -1,5 +1,7 @@
-import 'package:fintech/features/authentication/address_screen/address_screen.dart';
+
+
 import 'package:fintech/features/home_verified/home_verified.dart';
+import 'package:fintech/features/loan_screens/views_ui/main_loan.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -15,9 +17,9 @@ class _SimpleNavBarState extends State<SimpleNavBar> {
 
   final pages = [
     HomeVerified(),
-    Container(), // Loan page
-    Container(), // Bills page
-    Container(), // More page
+    MainLoan(), // Loan page
+    MainLoan(), // Bills page
+    MainLoan(), // More page
   ];
 
   Widget navIcon(String asset, bool isActive) {
@@ -60,7 +62,10 @@ class _SimpleNavBarState extends State<SimpleNavBar> {
             label: "Loan",
           ),
           BottomNavigationBarItem(
-            icon: navIcon("assets/images/icons/Menu.svg", currentIndex == 2),
+            icon: navIcon(
+              "assets/images/icons/cash_new.svg",
+              currentIndex == 2,
+            ),
             label: "Bills",
           ),
           BottomNavigationBarItem(

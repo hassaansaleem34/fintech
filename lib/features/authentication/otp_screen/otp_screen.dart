@@ -1,9 +1,11 @@
 import 'package:fintech/core/constants/colors.dart';
+import 'package:fintech/core/constants/image_string.dart';
 import 'package:fintech/core/constants/string_text.dart';
 import 'package:fintech/core/constants/text_style.dart';
 import 'package:fintech/core/routes_screens/route_screens.dart';
 import 'package:fintech/core/widgets/widgets_constant.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 
 class OtpScreen extends StatefulWidget {
   const OtpScreen({super.key});
@@ -37,8 +39,17 @@ class _OtpScreenState extends State<OtpScreen> {
     final phoneNumber = ModalRoute.of(context)!.settings.arguments as String;
 
     return Scaffold(
+      resizeToAvoidBottomInset: true,
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        leading: IconButton(
+          onPressed: () => Navigator.pop(context),
+          icon: SvgPicture.asset(AppAssets.backImage),
+        ),
+      ),
       body: Padding(
-        padding: const EdgeInsets.only(left: 20, top: 100, right: 30),
+        padding: const EdgeInsets.only(left: 20, top: 50, right: 30),
         child: Column(
           children: [
             Row(
@@ -89,12 +100,12 @@ class _OtpScreenState extends State<OtpScreen> {
             ),
 
             Padding(
-              padding: const EdgeInsets.only(top: 350),
+              padding: const EdgeInsets.only(top: 330),
               child: AppButton(
                 text: Texts.VerifyButton,
                 onPressed: isButtonEnabled
                     ? () {
-                        print("OTP Verified: $otp");
+                        // print("OTP Verified: $otp");
                         Navigator.pushNamed(context, MyRoutes.infoScreen);
                       }
                     : () {},

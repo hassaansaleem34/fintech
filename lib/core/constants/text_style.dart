@@ -47,4 +47,16 @@ class TextOnStyle {
     fontWeight: FontWeight.w400,
     color: ColorsUse.signUp,
   );
+  static const TextStyle loanAppBarStyle = TextStyle(
+   
+    fontSize: 18,
+    fontWeight: FontWeight.w700,
+    color: Color(0xff1F1F1F),
+  );
+  static const TextStyle loanRequestStyle = TextStyle(
+   
+    fontSize: 14,
+    fontWeight: FontWeight.w500,
+    color: ColorsUse.onBoardContainer,
+  );
 }

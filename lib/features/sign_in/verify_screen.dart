@@ -1,9 +1,11 @@
 import 'package:fintech/core/constants/colors.dart';
+import 'package:fintech/core/constants/image_string.dart';
 import 'package:fintech/core/constants/string_text.dart';
 import 'package:fintech/core/constants/text_style.dart';
 import 'package:fintech/core/routes_screens/route_screens.dart';
 import 'package:fintech/core/widgets/widgets_constant.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 
 class VerifyScreen extends StatefulWidget {
   const VerifyScreen({super.key});
@@ -34,7 +36,16 @@ class _VerifyScreenState extends State<VerifyScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final String email = ModalRoute.of(context)!.settings.arguments as String;
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        leading: IconButton(
+          onPressed: () => Navigator.pop(context),
+          icon: SvgPicture.asset(AppAssets.backImage),
+        ),
+      ),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.only(left: 20, top: 60, right: 30),
@@ -48,7 +59,10 @@ class _VerifyScreenState extends State<VerifyScreen> {
               SizedBox(height: 10),
               Row(
                 children: [
-                  Text(Texts.sentCode, style: TextOnStyle.phoneNumberDes),
+                  Text(
+                    "We sent a code to \n$email \nEnter the code to complete your verification",
+                    style: TextOnStyle.phoneNumberDes,
+                  ),
                 ],
               ),
               SizedBox(height: 40),

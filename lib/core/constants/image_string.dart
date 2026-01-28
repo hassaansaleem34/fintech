@@ -15,11 +15,13 @@ class AppAssets {
   static const String personImage = "assets/images/icons/leading_icon.svg";
   static const String cancelImage = "assets/images/icons/cancle.svg";
   static const String emailImage = "assets/images/icons/email_icon.svg";
+  static const String cashImage = "assets/images/icons/cash_new.svg";
+
   static const String leadingpersonImage =
       "assets/images/icons/Leading Icon (3).svg";
   static const String calendarImage = "assets/images/icons/calendar_icon.svg";
 
   static const String dropDownImage =
       "assets/images/icons/drop_downarrow.svg.svg";
-  static const String LockImage = "assets/images/icons/lock_1.svg";
+  static const String lockImage = "assets/images/icons/lock_1.svg";
 }

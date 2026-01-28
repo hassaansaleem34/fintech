@@ -1,11 +1,19 @@
 import 'package:fintech/core/constants/colors.dart';
-import 'package:fintech/core/widgets/navbar.dart';
+
 import 'package:fintech/core/widgets/transaction.dart';
+import 'package:fintech/features/home_verified/see_all.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-class HomeVerified extends StatelessWidget {
-  const HomeVerified({super.key});
+class HomeVerified extends StatefulWidget {
+  HomeVerified({super.key});
+
+  @override
+  State<HomeVerified> createState() => _HomeVerifiedState();
+}
+
+class _HomeVerifiedState extends State<HomeVerified> {
+  int selectedIndex = -1;
 
   @override
   Widget build(BuildContext context) {
@@ -112,15 +120,33 @@ class HomeVerified extends StatelessWidget {
                 SvgPicture.asset("assets/images/icons/Slider.svg"),
                 SizedBox(height: 20),
                 Padding(
-                  padding: const EdgeInsets.only(left: 40, right: 30),
+                  padding: const EdgeInsets.only(left: 30, right: 30),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      SvgPicture.asset("assets/images/icons/Airtime.svg"),
-                      SvgPicture.asset("assets/images/icons/wifi.svg"),
-                      SvgPicture.asset("assets/images/icons/tv.svg"),
-                      SvgPicture.asset("assets/images/icons/electric.svg"),
-                    ],
+                    children: List.generate(4, (index) {
+                      final icons = [
+                        "assets/images/icons/Airtime.svg",
+                        "assets/images/icons/wifi.svg",
+                        "assets/images/icons/tv.svg",
+                        "assets/images/icons/electric.svg",
+                      ];
+
+                      return GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            selectedIndex = index;
+                          });
+                        },
+                        child: SvgPicture.asset(
+                          icons[index],
+                          color: selectedIndex == index
+                              ? Colors.blue
+                              : ColorsUse.onBoardContainer,
+                          width: 30,
+                          height: 30,
+                        ),
+                      );
+                    }),
                   ),
                 ),
                 SizedBox(height: 20),
@@ -176,12 +202,22 @@ class HomeVerified extends StatelessWidget {
                       ),
                     ),
                     Spacer(),
-                    Text(
-                      "See all",
-                      style: TextStyle(
-                        color: Color(0xff1F1F1F),
-                        fontSize: 14,
-                        fontWeight: FontWeight.w700,
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => AllTransactionsScreen(),
+                          ),
+                        );
+                      },
+                      child: Text(
+                        "See all",
+                        style: TextStyle(
+                          color: Color(0xff1F1F1F),
+                          fontSize: 14,
+                          fontWeight: FontWeight.w700,
+                        ),
                       ),
                     ),
                   ],
@@ -197,6 +233,11 @@ class HomeVerified extends StatelessWidget {
                         fontSize: 14,
                         fontWeight: FontWeight.w400,
                       ),
+                    ),
+                    SvgPicture.asset(
+                      "assets/images/icons/cash.svg",
+                      height: 24,
+                      width: 24,
                     ),
                   ],
                 ),
